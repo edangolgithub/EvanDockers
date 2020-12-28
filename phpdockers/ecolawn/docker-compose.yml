@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  ecodb:
+    image: mysql:8.0
+    container_name: ecodb
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MYSQL_DATABASE=ecodb
+    volumes:
+       - ./data/eco.sql:/docker-entrypoint-initdb.d/eco.sql
+       - db_data:/var/lib/mysql # persist database data inside docker storage
+    command: '--default-authentication-plugin=mysql_native_password'
+    networks:
+      - eco-network
+
+  ecoapp:
+      depends_on:
+       - ecodb
+      image: phpmyadmin/phpmyadmin
+      container_name: ecophpmyadmin
+      restart: always
+      ports:
+       - '9001:80'
+      environment:
+        PMA_HOST: ecodb
+      networks:
+      - eco-network    
+
+  wordpress:
+    depends_on:
+      - ecodb
+    image: wordpress
+    container_name: ecowordpress
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=$MYSQL_USER
+      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_NAME=ecodb
+    volumes:
+      - ./wp/wp-content:/var/www/html/wp-content
+      - ./wp/wp-config.php:/var/www/html/wp-config.php
+    networks:
+      - eco-network
+volumes:
+    db_data: {}
+
+networks:
+  eco-network:
+    driver: bridge
