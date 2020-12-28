@@ -19,11 +19,13 @@ services:
        - db
       image: phpmyadmin/phpmyadmin
       container_name: phpmyadmin
-      restart: unless-stopped
+      restart: always
       ports:
-       - '9000:80'
+       - '9001:80'
       environment:
         PMA_HOST: db
+      networks:
+      - app-network    
 
   wordpress:
     depends_on:
@@ -50,6 +52,7 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - wordpress:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
@@ -65,7 +68,7 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - wordpress:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email dangolevan@gmail.com --agree-tos --no-eff-email --staging -d dangol.gq -d www.dangol.gq
+    command: certonly --webroot --webroot-path=/var/www/html --email dangolevan@gmail.com --agree-tos --no-eff-email --force-renewal -d dangol.gq -d www.dangol.gq
 
 volumes:
   certbot-etc:
