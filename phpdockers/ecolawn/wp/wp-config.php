@@ -26,19 +26,19 @@ define( 'DISALLOW_FILE_EDIT', true ); // Disable File Editor - Security > Settin
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'ecolawnl_hnbkaec');
+define('DB_NAME', 'ecodb');
 
 /** MySQL database username */
-define('DB_USER', 'ecolawnl_ecolawn');
+define('DB_USER', 'mysqluser');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'bnn0igVx%sfo');
+define('DB_PASSWORD', 'mysqlpassword');
 
 /** MySQL hostname */
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'ecodb');
 
 /** Database Charset to use in creating database tables. */
-define('DB_CHARSET', 'utf8mb4');
+define('DB_CHARSET', 'utf8');
 
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');

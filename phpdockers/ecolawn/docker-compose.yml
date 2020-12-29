@@ -9,7 +9,7 @@ services:
     environment:
       - MYSQL_DATABASE=ecodb
     volumes:
-       - ./data/eco.sql:/docker-entrypoint-initdb.d/eco.sql
+      # - ./data/eco.sql:/docker-entrypoint-initdb.d/eco.sql
        - db_data:/var/lib/mysql # persist database data inside docker storage
     command: '--default-authentication-plugin=mysql_native_password'
     networks:
@@ -36,17 +36,23 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_HOST=ecodb
       - WORDPRESS_DB_USER=$MYSQL_USER
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
       - WORDPRESS_DB_NAME=ecodb
+    ports:
+      - '80:80'
     volumes:
-      - ./wp/wp-content:/var/www/html/wp-content
-      - ./wp/wp-config.php:/var/www/html/wp-config.php
+      #- ./wp/wp-content:/var/www/html/wp-content
+      #- ./wp/wp-config.php:/var/www/html/wp-config.php
+      
+      # -  wp-data:/var/www/html
+        - ./wp:/var/www/html
     networks:
       - eco-network
 volumes:
-    db_data: {}
+    db_data: 
+  #  wp-data:
 
 networks:
   eco-network:
