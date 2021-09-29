@@ -11,3 +11,30 @@ docker push 984648741180.dkr.ecr.us-east-1.amazonaws.com/node2:latest
 
 aws ecr delete-repository --repository-name node2 --region us-east-1 --force
 ```
+```
+docker run -dp 3001:3000 `
+     -w /app -v "$(pwd):/app" `
+     node:12-alpine `
+     sh -c "yarn install && yarn run dev"
+
+
+
+docker run -d `
+     --network todo-app --network-alias mysql `
+     -v todo-mysql-data:/var/lib/mysql `
+     -e MYSQL_ROOT_PASSWORD=secret `
+     -e MYSQL_DATABASE=todos `
+     mysql:5.7
+
+
+
+     docker run -dp 3000:3000 `
+   -w /app -v "$(pwd):/app" `
+   --network todo-app `
+   -e MYSQL_HOST=mysql `
+   -e MYSQL_USER=root `
+   -e MYSQL_PASSWORD=secret `
+   -e MYSQL_DB=todos `
+   node:12-alpine `
+   sh -c "yarn install && yarn run dev"
+```
