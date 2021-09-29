@@ -1,0 +1,131 @@
+Our Application
+
+
+For the rest of this tutorial, we will be working with a simple todo list manager that is running in Node.js. If you’re not familiar with Node.js, don’t worry! No real JavaScript experience is needed!
+
+At this point, your development team is quite small and you’re simply building an app to prove out your MVP (minimum viable product). You want to show how it works and what it’s capable of doing without needing to think about how it will work for a large team, multiple developers, etc.
+
+Todo List Manager Screenshot
+
+Getting our App
+Before we can run the application, we need to get the application source code onto our machine. For real projects, you will typically clone the repo. But, for this tutorial, we have created a ZIP file containing the application.
+
+Download the App contents. You can either pull the entire project or download it as a zip and extract the app folder out to get started with
+
+Once extracted, use your favorite code editor to open the project. If you’re in need of an editor, you can use Visual Studio Code. You should see the package.json and two subdirectories (src and spec).
+
+Screenshot of Visual Studio Code opened with the app loaded
+
+Building the App’s Container Image
+In order to build the application, we need to use a Dockerfile. A Dockerfile is simply a text-based script of instructions that is used to create a container image. If you’ve created Dockerfiles before, you might see a few flaws in the Dockerfile below. But, don’t worry! We’ll go over them.
+
+Create a file named Dockerfile in the same folder as the file package.json with the following contents.
+
+ FROM node:12-alpine
+ WORKDIR /app
+ COPY . .
+ RUN yarn install --production
+ CMD ["node", "src/index.js"]
+Please check that the file Dockerfile has no file extension like .txt. Some editors may append this file extension automatically and this would result in an error in the next step.
+
+If you haven’t already done so, open a terminal and go to the app directory with the Dockerfile. Now build the container image using the docker build command.
+
+ docker build -t getting-started .
+This command used the Dockerfile to build a new container image. You might have noticed that a lot of “layers” were downloaded. This is because we instructed the builder that we wanted to start from the node:12-alpine image. But, since we didn’t have that on our machine, that image needed to be downloaded.
+
+After the image was downloaded, we copied in our application and used yarn to install our application’s dependencies. The CMD directive specifies the default command to run when starting a container from this image.
+
+Finally, the -t flag tags our image. Think of this simply as a human-readable name for the final image. Since we named the image getting-started, we can refer to that image when we run a container.
+
+The . at the end of the docker build command tells that Docker should look for the Dockerfile in the current directory.
+
+Starting an App Container
+Now that we have an image, let’s run the application! To do so, we will use the docker run command (remember that from earlier?).
+
+Start your container using the docker run command and specify the name of the image we just created:
+
+ docker run -dp 3000:3000 getting-started
+Remember the -d and -p flags? We’re running the new container in “detached” mode (in the background) and creating a mapping between the host’s port 3000 to the container’s port 3000. Without the port mapping, we wouldn’t be able to access the application.
+
+After a few seconds, open your web browser to http://localhost:3000. You should see our app!
+
+Empty Todo List
+
+Go ahead and add an item or two and see that it works as you expect. You can mark items as complete and remove items. Your frontend is successfully storing items in the backend! Pretty quick and easy, huh?
+
+At this point, you should have a running todo list manager with a few items, all built by you! Now, let’s make a few changes and learn about managing our containers.
+
+If you take a quick look at the Docker Dashboard, you should see your two containers running now (this tutorial and your freshly launched app container)!
+
+Docker Dashboard with tutorial and app containers running
+
+Recap
+In this short section, we learned the very basics about building a container image and created a Dockerfile to do so. Once we built an image, we started the container and saw the running app!
+
+Next, we’re going to make a modification to our app and learn how to update our running application with a new image. Along the way, we’ll learn a few other useful commands.
+
+
+
+
+
+
+Sharing Our Application
+Estimated reading time: 3 minutes
+
+Now that we’ve built an image, let’s share it! To share Docker images, you have to use a Docker registry. The default registry is Docker Hub and is where all of the images we’ve used have come from.
+
+Create a Repo
+To push an image, we first need to create a repo on Docker Hub.
+
+Go to Docker Hub and log in if you need to.
+
+Click the Create Repository button.
+
+For the repo name, use getting-started. Make sure the Visibility is Public.
+
+Click the Create button!
+
+If you look on the right-side of the page, you’ll see a section named Docker commands. This gives an example command that you will need to run to push to this repo.
+
+Docker command with push example
+
+Pushing our Image
+In the command line, try running the push command you see on Docker Hub. Note that your command will be using your namespace, not “docker”.
+
+ $ docker push docker/getting-started
+ The push refers to repository [docker.io/docker/getting-started]
+ An image does not exist locally with the tag: docker/getting-started
+Why did it fail? The push command was looking for an image named docker/getting-started, but didn’t find one. If you run docker image ls, you won’t see one either.
+
+To fix this, we need to “tag” our existing image we’ve built to give it another name.
+
+Login to the Docker Hub using the command docker login -u YOUR-USER-NAME.
+
+Use the docker tag command to give the getting-started image a new name. Be sure to swap out YOUR-USER-NAME with your Docker ID.
+
+ docker tag getting-started YOUR-USER-NAME/getting-started
+Now try your push command again. If you’re copying the value from Docker Hub, you can drop the tagname portion, as we didn’t add a tag to the image name. If you don’t specify a tag, Docker will use a tag called latest.
+
+ docker push YOUR-USER-NAME/getting-started
+Running our Image on a New Instance
+Now that our image has been built and pushed into a registry, let’s try running our app on a brand new instance that has never seen this container image! To do this, we will use Play with Docker.
+
+Open your browser to Play with Docker.
+
+Log in with your Docker Hub account.
+
+Once you’re logged in, click on the “+ ADD NEW INSTANCE” link in the left side bar. (If you don’t see it, make your browser a little wider.) After a few seconds, a terminal window will be opened in your browser.
+
+Play with Docker add new instance
+
+In the terminal, start your freshly pushed app.
+
+ docker run -dp 3000:3000 YOUR-USER-NAME/getting-started
+You should see the image get pulled down and eventually start up!
+
+Click on the 3000 badge when it comes up and you should see the app with your modifications! Hooray! If the 3000 badge doesn’t show up, you can click on the “Open Port” button and type in 3000.
+
+Recap
+In this section, we learned how to share our images by pushing them to a registry. We then went to a brand new instance and were able to run the freshly pushed image. This is quite common in CI pipelines, where the pipeline will create the image and push it to a registry and then the production environment can use the latest version of the image.
+
+Now that we have that figured out, let’s circle back around to what we noticed at the end of the last section. As a reminder, we noticed that when we restarted the app, we lost all of our todo list items. That’s obviously not a great user experience, so let’s learn how we can persist the data across restarts!

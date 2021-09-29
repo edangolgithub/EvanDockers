@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  sql-server:
+    container_name: mssql2019
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=1Secure*Password1
+    
+    ports:
+      - 1433:1433
+    volumes: 
+            - mssql-volume:/var/opt/mssql
+
+  dockersqlserver:
+    container_name: api
+    image: ${DOCKER_REGISTRY-}dockersqlservertest
+    build:
+      context: .
+      dockerfile: DockerSqlServer/Dockerfile
+    depends_on:
+      - sql-server
+    ports:
+     - "5002:80"
+    environment:
+       DBCON: "Server=sql-server,1433;Database=AppDbContext;User=sa;Password=1Secure*Password1;"
+    
+volumes:
+    mssql-volume:

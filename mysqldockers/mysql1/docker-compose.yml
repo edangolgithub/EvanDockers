@@ -1,0 +1,34 @@
+version: '3.1'
+services:
+  evanwebserver:
+    image: php:7.2.2-apache
+    container_name: evanwebserver
+    depends_on:
+      - evandb
+    volumes:
+      - ./php/:/var/www/html/
+    ports:
+      - "9003:80"
+  evandb:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_db
+      container_name: evanmysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+  evanphpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - evandb
+    ports:
+      - "9004:80"
+    restart: always
+    container_name: evanphpmyadmin
+    environment: 
+      PMA_HOST: evandb
+volumes:
+    db_data:      

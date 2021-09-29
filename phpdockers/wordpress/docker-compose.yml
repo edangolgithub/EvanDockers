@@ -1,0 +1,62 @@
+version: '3.3'
+
+services:
+   wordpress:
+     container_name: Ewordpress
+     depends_on:
+       - db
+     image: wordpress:latest
+     volumes:
+       - wordpress_files:/var/www/html
+       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+     ports:
+       - "9001:80"
+     restart: unless-stopped
+     env_file: .env
+     environment:
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=$MYSQL_USER
+      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_NAME=$DB_NAME
+
+     networks:
+      - app-network
+
+
+   db:
+     container_name: Edb
+     image: mysql
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: unless-stopped
+     env_file: .env
+     environment:
+       - MYSQL_DATABASE=$DB_NAME      
+       
+     command: '--default-authentication-plugin=mysql_native_password'
+
+     networks:
+      - app-network
+  
+
+   phpmyadmin:
+      container_name: Ephpmyadmin
+      depends_on:
+       - db
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadmin
+      restart: unless-stopped
+      ports:
+       - '9002:80'
+      environment:
+        PMA_HOST: db
+      networks:
+      - app-network
+  
+volumes:
+  wordpress_files:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge
