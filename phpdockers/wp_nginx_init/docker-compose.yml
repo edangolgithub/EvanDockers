@@ -21,7 +21,7 @@ services:
       container_name: phpmyadmin
       restart: always
       ports:
-       - '9001:80'
+       - '9051:80'
       environment:
         PMA_HOST: db
       networks:
@@ -51,7 +51,7 @@ services:
     container_name: webserver
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "9050:80"
     volumes:
       - wordpress:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
