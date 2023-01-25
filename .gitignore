@@ -37,6 +37,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+dotnet/rabbitmq/data/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -861,3 +862,14 @@ $RECYCLE.BIN/
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
 /dotnet/AspWebApi/bin
+data
+dotnet/rabbitmq/data/.erlang.cookie
+dotnet/rabbitmq/data/mnesia/rabbit@mabbit/DECISION_TAB.LOG
+dotnet/rabbitmq/data/mnesia/rabbit@mabbit/LATEST.LOG
+dotnet/rabbitmq/data/mnesia/rabbit@mabbit/rabbit_durable_exchange.DCD
+dotnet/rabbitmq/data/mnesia/rabbit@mabbit/rabbit_runtime_parameters.DCD
+dotnet/rabbitmq/data/mnesia/rabbit@mabbit/rabbit_serial
+dotnet/rabbitmq/data/mnesia/rabbit@mabbit/rabbit_user_permission.DCD
+dotnet/rabbitmq/data/mnesia/rabbit@mabbit/rabbit_user.DCD
+dotnet/rabbitmq/data/mnesia/rabbit@mabbit/rabbit_vhost.DCD
+dotnet/rabbitmq/data/mnesia/rabbit@mabbit/schema.DAT
