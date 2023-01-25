@@ -24,7 +24,11 @@ services:
     ports:
      - "5002:80"
     environment:
-       DBCON: "Server=sql-server,1433;Database=AppDbContext;User=sa;Password=1Secure*Password1;"
+       DBCON: "Server=sql-server,1433;Database=AppDbContext;User=sa;Password=1Secure*Password1;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
     
 volumes:
     mssql-volume:
+
+#sqlcmd -S localhost -U sa -P '1Secure*Password1'
+#docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -p 1433:1433 --name sql1 --hostname sql1 -d  mcr.microsoft.com/mssql/server:2019-latest
+#docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=1Secure*Password1" -p 1433:1433 --name sql1 --hostname sql1 -d mcr.microsoft.com/mssql/server:2019-latest
