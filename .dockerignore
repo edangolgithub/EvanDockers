@@ -3,5 +3,5 @@
 docker-compose.yml
 .dockerignore
 redis/data/
-edis/config/
+redis/config/
 
