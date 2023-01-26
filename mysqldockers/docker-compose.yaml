@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  mysql-db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    cap_add:
+      - SYS_NICE
+    restart: unless-stopped
+    environment:      
+      - MYSQL_ROOT_PASSWORD=mysqlpassword
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-db:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  phpmyadmin:
+    depends_on:
+      - mysql-db
+    image: phpmyadmin/phpmyadmin
+    container_name: phpadmin_container
+    environment:
+      PMA_HOST: mysql-db
+    links:
+      - mysql-db:mysql-db
+    ports:
+      - 9000:80
+    restart: always
+volumes:
+  mysql-db:
+    driver: local
