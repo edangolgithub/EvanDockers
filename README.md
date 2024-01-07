@@ -37,4 +37,10 @@ docker run -d `
    -e MYSQL_DB=todos `
    node:12-alpine `
    sh -c "yarn install && yarn run dev"
+   
+   
+   
+   //new
 ```
+git config --global user.email "dangolevan@gmail.com"
+  git config --global user.name "edangolgithub"
