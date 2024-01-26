@@ -43,4 +43,4 @@ docker run -d `
    //new
 ```
 git config --global user.email "dangolevan@gmail.com"
-  git config --global user.name "edangolgithub"
+git config --global user.name "edangolgithub"

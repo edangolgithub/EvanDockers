@@ -15,7 +15,7 @@ services:
 
   dockersqlserver:
     container_name: api
-    image: ${DOCKER_REGISTRY-}dockersqlservertest
+    #image: ${DOCKER_REGISTRY-}dockersqlservertest
     build:
       context: .
       dockerfile: DockerSqlServer/Dockerfile
